@@ -14,5 +14,5 @@ COPY . .
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Run the seed script first, then start the app
-CMD ["sh", "-c", "node src/seeder/createAdminUser.js && node src/server.js"]
+# Start the application
+CMD ["node", "src/server.js"]
