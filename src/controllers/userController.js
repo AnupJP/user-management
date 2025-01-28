@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const sequelize = require('../config/db');
 const { MESSAGES : responseMessages } = require('../constants/responseMessages');
+const redis = require('../config/redis');
 
 // Create a new user
 exports.createUser = async (req, res) => {
@@ -54,13 +55,25 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// Get all users
+// Get all users with caching
 exports.getUsers = async (req, res) => {
   try {
+    const cacheKey = 'users';
+    const cachedUsers = await redis.get(cacheKey);
+
+    if (cachedUsers) {
+      console.log("Returning cached Data.")
+      return res.status(200).json(JSON.parse(cachedUsers));  // Return cached data
+    }
+
     const users = await User.findAll();
     if (!users || users.length === 0) {
       return res.status(404).json({ message: responseMessages.NO_USERS_FOUND });
     }
+
+    // Cache the fetched users for 10 minutes (600 seconds)
+    await redis.setex(cacheKey, 600, JSON.stringify(users));
+
     res.status(200).json(users);
   } catch (error) {
     console.error(error);
@@ -68,8 +81,7 @@ exports.getUsers = async (req, res) => {
   }
 };
 
-
-// Get user by ID
+// Get user by ID with caching
 exports.getUserById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -77,10 +89,20 @@ exports.getUserById = async (req, res) => {
       return res.status(400).json({ error: responseMessages.INVALID_USER_ID });
     }
 
+    // Check cache first
+    const cacheKey = `user:${id}`;
+    const cachedUser = await redis.get(cacheKey);
+
+    if (cachedUser) {
+      return res.status(200).json(JSON.parse(cachedUser));  // Return cached data
+    }
+
     const user = await User.getById(id);
     if (!user) {
       return res.status(404).json({ error: responseMessages.USER_NOT_FOUND });
     }
+
+    await redis.setex(cacheKey, 600, JSON.stringify(user));
 
     res.status(200).json(user);
   } catch (error) {
@@ -117,6 +139,10 @@ exports.updateUser = async (req, res) => {
       return res.status(404).json({ error: responseMessages.USER_NOT_FOUND });
     }
 
+    // Invalidate cache
+    await redis.del(`user:${id}`);
+    await redis.del('users');
+
     res.status(200).json({
       message: responseMessages.USER_UPDATED,
       id,
@@ -145,6 +171,10 @@ exports.deleteUser = async (req, res) => {
     if (!deletedUser) {
       return res.status(404).json({ error: responseMessages.USER_NOT_FOUND });
     }
+
+    // Invalidate cache
+    await redis.del(`user:${id}`);
+    await redis.del('users');
 
     res.status(200).json({ message: responseMessages.USER_DELETED });
   } catch (error) {
