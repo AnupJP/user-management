@@ -73,7 +73,7 @@ const User = sequelize.define('User', {
 // Static Methods to match controller operations
 User.getAll = async function() {
   return await this.findAll({
-    attributes: { exclude: ['password'] } // Don't send passwords
+    attributes: { exclude: ['password'] }
   });
 };
 
@@ -116,12 +116,10 @@ User.delete = async function(id) {
   return true;
 };
 
-// Instance method for password validation
 User.prototype.validatePassword = async function(password) {
   return await bcrypt.compare(password, this.password);
 };
 
-// Additional helper methods
 User.findByEmail = async function(email) {
   return await this.findOne({
     where: { email },
@@ -129,7 +127,6 @@ User.findByEmail = async function(email) {
   });
 };
 
-// Sync the model with the database
 User.sync()
   .then(() => console.log('User model synced successfully'))
   .catch((err) => console.error('Error syncing User model:', err));

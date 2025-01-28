@@ -6,33 +6,27 @@ exports.createUser = async (req, res) => {
   try {
     const { username, email, password, mobile_no, role } = req.body;
 
-    // Validate required fields
     if (!username || !email || !password) {
       return res.status(400).json({ error: responseMessages.MISSING_REQUIRED_FIELDS });
     }
 
-    // Default role to 'user' if not provided
     const userRole = role || 'user';
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ error: responseMessages.INVALID_EMAIL_FORMAT });
     }
 
-    // Optional: Validate mobile_no format
     const mobileRegex = /^[0-9]{10}$/;
     if (mobile_no && !mobileRegex.test(mobile_no)) {
       return res.status(400).json({ error: responseMessages.INVALID_MOBILE_FORMAT });
     }
 
-    // Check for duplicate email
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(409).json({ error: responseMessages.EMAIL_ALREADY_EXISTS });
     }
 
-    // Create user
     const user = await User.create({ username, email, password, mobile_no, role: userRole });
 
     res.status(201).json({
@@ -71,18 +65,18 @@ exports.getUserById = async (req, res) => {
   const { id } = req.params;
   try {
     if (!id) {
-      return res.status(400).json({ error: MESSAGES.INVALID_USER_ID });
+      return res.status(400).json({ error: responseMessages.INVALID_USER_ID });
     }
 
     const user = await User.getById(id);
     if (!user) {
-      return res.status(404).json({ error: MESSAGES.USER_NOT_FOUND });
+      return res.status(404).json({ error: responseMessages.USER_NOT_FOUND });
     }
 
     res.status(200).json(user);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: MESSAGES.FAILED_TO_FETCH_USER });
+    res.status(500).json({ error: responseMessages.FAILED_TO_FETCH_USER });
   }
 };
 
@@ -93,32 +87,29 @@ exports.updateUser = async (req, res) => {
 
   try {
     if (!id) {
-      return res.status(400).json({ error: MESSAGES.INVALID_USER_ID });
+      return res.status(400).json({ error: responseMessages.INVALID_USER_ID });
     }
 
-    // Validate required fields
     if (!username && !email && !password && !mobile_no && !role) {
-      return res.status(400).json({ error: MESSAGES.NO_FIELDS_TO_UPDATE });
+      return res.status(400).json({ error: responseMessages.NO_FIELDS_TO_UPDATE });
     }
 
     // Default role to 'user' if not provided
     const userRole = role || 'user';
 
-    // Optional: Validate mobile_no format
     const mobileRegex = /^[0-9]{10}$/;
     if (mobile_no && !mobileRegex.test(mobile_no)) {
-      return res.status(400).json({ error: MESSAGES.INVALID_MOBILE_FORMAT });
+      return res.status(400).json({ error: responseMessages.INVALID_MOBILE_FORMAT });
     }
 
-    // Use the User model to update the user
     const updatedUser = await User.update(id, { username, email, password, mobile_no, role: userRole });
 
     if (!updatedUser) {
-      return res.status(404).json({ error: MESSAGES.USER_NOT_FOUND });
+      return res.status(404).json({ error: responseMessages.USER_NOT_FOUND });
     }
 
     res.status(200).json({
-      message: MESSAGES.USER_UPDATED,
+      message: responseMessages.USER_UPDATED,
       id,
       username,
       email,
@@ -127,7 +118,7 @@ exports.updateUser = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: MESSAGES.FAILED_TO_UPDATE_USER });
+    res.status(500).json({ error: responseMessages.FAILED_TO_UPDATE_USER });
   }
 };
 
@@ -137,19 +128,19 @@ exports.deleteUser = async (req, res) => {
 
   try {
     if (!id) {
-      return res.status(400).json({ error: MESSAGES.INVALID_USER_ID });
+      return res.status(400).json({ error: responseMessages.INVALID_USER_ID });
     }
 
     const deletedUser = await User.delete(id);
 
     if (!deletedUser) {
-      return res.status(404).json({ error: MESSAGES.USER_NOT_FOUND });
+      return res.status(404).json({ error: responseMessages.USER_NOT_FOUND });
     }
 
-    res.status(200).json({ message: MESSAGES.USER_DELETED });
+    res.status(200).json({ message: responseMessages.USER_DELETED });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: MESSAGES.FAILED_TO_DELETE_USER });
+    res.status(500).json({ error: responseMessages.FAILED_TO_DELETE_USER });
   }
 };
 
