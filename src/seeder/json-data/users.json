@@ -1,0 +1,143 @@
+[
+    {
+      "username": "User1",
+      "email": "user1@example.com",
+      "password": "Password1!",
+      "mobile_no": "9876543210",
+      "role": "user"
+    },
+    {
+      "username": "User2",
+      "email": "user2@example.com",
+      "password": "Password2@",
+      "mobile_no": "9876543211",
+      "role": "user"
+    },
+    {
+      "username": "User3",
+      "email": "user3@example.com",
+      "password": "Password3#",
+      "mobile_no": "9876543212",
+      "role": "user"
+    },
+    {
+      "username": "User4",
+      "email": "user4@example.com",
+      "password": "Password4$",
+      "mobile_no": "9876543213",
+      "role": "user"
+    },
+    {
+      "username": "User5",
+      "email": "user5@example.com",
+      "password": "Password5%",
+      "mobile_no": "9876543214",
+      "role": "user"
+    },
+    {
+      "username": "User6",
+      "email": "user6@example.com",
+      "password": "Password6^",
+      "mobile_no": "9876543215",
+      "role": "user"
+    },
+    {
+      "username": "User7",
+      "email": "user7@example.com",
+      "password": "Password7&",
+      "mobile_no": "9876543216",
+      "role": "user"
+    },
+    {
+      "username": "User8",
+      "email": "user8@example.com",
+      "password": "Password8*",
+      "mobile_no": "9876543217",
+      "role": "user"
+    },
+    {
+      "username": "User9",
+      "email": "user9@example.com",
+      "password": "Password9(",
+      "mobile_no": "9876543218",
+      "role": "user"
+    },
+    {
+      "username": "User10",
+      "email": "user10@example.com",
+      "password": "Password10)",
+      "mobile_no": "9876543219",
+      "role": "user"
+    },
+    {
+      "username": "User11",
+      "email": "user11@example.com",
+      "password": "Password11_",
+      "mobile_no": "9876543220",
+      "role": "user"
+    },
+    {
+      "username": "User12",
+      "email": "user12@example.com",
+      "password": "Password12-",
+      "mobile_no": "9876543221",
+      "role": "user"
+    },
+    {
+      "username": "User13",
+      "email": "user13@example.com",
+      "password": "Password13+",
+      "mobile_no": "9876543222",
+      "role": "user"
+    },
+    {
+      "username": "User14",
+      "email": "user14@example.com",
+      "password": "Password14=",
+      "mobile_no": "9876543223",
+      "role": "user"
+    },
+    {
+      "username": "User15",
+      "email": "user15@example.com",
+      "password": "Password15~",
+      "mobile_no": "9876543224",
+      "role": "user"
+    },
+    {
+      "username": "User16",
+      "email": "user16@example.com",
+      "password": "Password16`",
+      "mobile_no": "9876543225",
+      "role": "user"
+    },
+    {
+      "username": "User17",
+      "email": "user17@example.com",
+      "password": "Password17!",
+      "mobile_no": "9876543226",
+      "role": "user"
+    },
+    {
+      "username": "User18",
+      "email": "user18@example.com",
+      "password": "Password18@",
+      "mobile_no": "9876543227",
+      "role": "user"
+    },
+    {
+      "username": "User19",
+      "email": "user19@example.com",
+      "password": "Password19#",
+      "mobile_no": "9876543228",
+      "role": "user"
+    },
+    {
+      "username": "User20",
+      "email": "user20@example.com",
+      "password": "Password20$",
+      "mobile_no": "9876543229",
+      "role": "user"
+    }
+  ]
+  
