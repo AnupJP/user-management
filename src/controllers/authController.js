@@ -9,19 +9,15 @@ exports.loginUser = async (req, res) => {
 
       console.log({ email, password })
 
-  
-      // Validate email and password
       if (!email || !password) {
         return res.status(400).json({ error: 'Email and password are required' });
       }
   
-      // Find the user by email
       const user = await User.findOne({
         where: {
             email
         }
     });
-      console.log("USer :: ", JSON.stringify(user))
       if (!user) {
         return res.status(400).json({ error: 'Invalid email or password' });
       }
@@ -34,9 +30,9 @@ exports.loginUser = async (req, res) => {
   
       // Generate a JWT token
       const token = jwt.sign(
-        { id: user.id, role: user.role },  // You can add more claims like email, username, etc.
-        process.env.JWT_SECRET,            // Store JWT_SECRET in environment variables
-        { expiresIn: '1h' }               // Set token expiration time as per your requirement
+        { id: user.id, role: user.role },  
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
       );
   
       res.status(200).json({

@@ -33,10 +33,8 @@ exports.createUser = async (req, res) => {
 
     const user = await User.create({ username, email, password, mobile_no, role: userRole }, { transaction: t });
 
-    // Commit the transaction after all operations are successful
     await t.commit();
 
-    // Return the created user information (excluding the password)
     res.status(201).json({
       message: responseMessages.USER_CREATED_SUCCESSFULLY,
       user: {
@@ -66,7 +64,7 @@ exports.getUsers = async (req, res) => {
       return res.status(200).json(JSON.parse(cachedUsers));  // Return cached data
     }
 
-    const users = await User.findAll();
+    const users = await User.getAll();
     if (!users || users.length === 0) {
       return res.status(404).json({ message: responseMessages.NO_USERS_FOUND });
     }
@@ -121,7 +119,7 @@ exports.updateUser = async (req, res) => {
       return res.status(400).json({ error: responseMessages.INVALID_USER_ID });
     }
 
-    if (!username && !email && !password && !mobile_no && !role) {
+    if (!username && !email && !mobile_no && !role && password === undefined) {
       return res.status(400).json({ error: responseMessages.NO_FIELDS_TO_UPDATE });
     }
 
@@ -133,7 +131,15 @@ exports.updateUser = async (req, res) => {
       return res.status(400).json({ error: responseMessages.INVALID_MOBILE_FORMAT });
     }
 
-    const updatedUser = await User.update(id, { username, email, password, mobile_no, role: userRole });
+    // Build the update object dynamically
+    const updateData = {};
+    if (username) updateData.username = username;
+    if (email) updateData.email = email;
+    if (password) updateData.password = password; // only set password if provided
+    if (mobile_no) updateData.mobile_no = mobile_no;
+    updateData.role = userRole;
+
+    const updatedUser = await User.update(id, updateData);
 
     if (!updatedUser) {
       return res.status(404).json({ error: responseMessages.USER_NOT_FOUND });
@@ -146,16 +152,14 @@ exports.updateUser = async (req, res) => {
     res.status(200).json({
       message: responseMessages.USER_UPDATED,
       id,
-      username,
-      email,
-      mobile_no,
-      role: userRole
+      ...updateData
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: responseMessages.FAILED_TO_UPDATE_USER });
   }
 };
+
 
 // Delete user
 exports.deleteUser = async (req, res) => {

@@ -1,13 +1,10 @@
-const { Sequelize } = require('sequelize');
-const sequelize = require('../config/db');
-
 const User = require('../models/userModel');
 
 const adminUser = {
     username: 'Admin',
     email: 'panchalanup2572@gmail.com',
-    password: 'Admin@123', // You should change this password
-    mobile_no: '9999999999', // Optional: Change as needed
+    password: 'Admin@123',
+    mobile_no: '9999999999',
     role: 'admin'
 }
 
