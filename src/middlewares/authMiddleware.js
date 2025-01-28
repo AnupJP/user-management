@@ -10,7 +10,18 @@ exports.verifyToken = (req, res, next) => {
     if (err) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
-    req.userId = decoded.id;
+
+    req.user = decoded;
     next();
   });
+};
+
+// Middleware to verify role
+exports.verifyRole = (role) => {
+  return (req, res, next) => {
+    if (!req.user || req.user.role !== role) {
+      return res.status(403).json({ error: 'Forbidden, insufficient permissions' });
+    }
+    next();
+  };
 };
