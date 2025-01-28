@@ -1,8 +1,11 @@
 const User = require('../models/userModel');
+const sequelize = require('../config/db');
 const { MESSAGES : responseMessages } = require('../constants/responseMessages');
 
 // Create a new user
 exports.createUser = async (req, res) => {
+  const t = await sequelize.transaction();
+
   try {
     const { username, email, password, mobile_no, role } = req.body;
 
@@ -22,13 +25,17 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ error: responseMessages.INVALID_MOBILE_FORMAT });
     }
 
-    const existingUser = await User.findOne({ where: { email } });
+    const existingUser = await User.findOne({ where: { email }, transaction: t });
     if (existingUser) {
       return res.status(409).json({ error: responseMessages.EMAIL_ALREADY_EXISTS });
     }
 
-    const user = await User.create({ username, email, password, mobile_no, role: userRole });
+    const user = await User.create({ username, email, password, mobile_no, role: userRole }, { transaction: t });
 
+    // Commit the transaction after all operations are successful
+    await t.commit();
+
+    // Return the created user information (excluding the password)
     res.status(201).json({
       message: responseMessages.USER_CREATED_SUCCESSFULLY,
       user: {
@@ -40,6 +47,8 @@ exports.createUser = async (req, res) => {
       }
     });
   } catch (error) {
+    // Rollback the transaction if anything goes wrong
+    await t.rollback();
     console.error(error);
     res.status(500).json({ error: responseMessages.INTERNAL_SERVER_ERROR });
   }
