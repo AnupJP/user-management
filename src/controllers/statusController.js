@@ -1,7 +1,5 @@
 const pool = require('../config/db');
 const redis = require('../config/redis')
-// const Redis = require('ioredis');
-
 
 exports.getStatus = async (req, res) => {
   try {
